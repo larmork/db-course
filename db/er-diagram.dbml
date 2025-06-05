@@ -1,0 +1,76 @@
+{
+  "dashboard": {
+    "id": null,
+    "title": "Business Dashboard - Online Courses",
+    "timezone": "browser",
+    "schemaVersion": 36,
+    "version": 1,
+    "refresh": "30s",
+    "panels": [
+      {
+        "type": "stat",
+        "title": "Total Registered Users",
+        "datasource": {
+          "type": "postgres",
+          "uid": "your_postgres_uid"
+        },
+        "targets": [
+          {
+            "format": "table",
+            "rawSql": "SELECT count(*) FROM users_db.users;",
+            "refId": "A"
+          }
+        ],
+        "gridPos": {
+          "x": 0,
+          "y": 0,
+          "w": 6,
+          "h": 4
+        }
+      },
+      {
+        "type": "stat",
+        "title": "Completed Lessons",
+        "datasource": {
+          "type": "postgres",
+          "uid": "your_postgres_uid"
+        },
+        "targets": [
+          {
+            "format": "table",
+            "rawSql": "\n                SELECT SUM(cnt) FROM (\n                  SELECT count(*) as cnt FROM education_db.progress_shard_1 WHERE completed = true\n                  UNION ALL\n                  SELECT count(*) FROM education_db.progress_shard_2 WHERE completed = true\n                ) AS combined;\n                ",
+            "refId": "B"
+          }
+        ],
+        "gridPos": {
+          "x": 6,
+          "y": 0,
+          "w": 6,
+          "h": 4
+        }
+      },
+      {
+        "type": "stat",
+        "title": "Total Comments",
+        "datasource": {
+          "type": "postgres",
+          "uid": "your_postgres_uid"
+        },
+        "targets": [
+          {
+            "format": "table",
+            "rawSql": "\n                SELECT SUM(cnt) FROM (\n                  SELECT count(*) as cnt FROM activity_db.comments_shard_1\n                  UNION ALL\n                  SELECT count(*) FROM activity_db.comments_shard_2\n                ) AS combined;\n                ",
+            "refId": "C"
+          }
+        ],
+        "gridPos": {
+          "x": 0,
+          "y": 4,
+          "w": 6,
+          "h": 4
+        }
+      }
+    ]
+  },
+  "overwrite": true
+}

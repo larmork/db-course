@@ -1,0 +1,1 @@
+-- SQL скрипт activity_db
