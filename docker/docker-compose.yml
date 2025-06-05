@@ -1,1 +1,94 @@
-()
+version: '3.8'
+
+services:
+  # ====================
+  # PostgreSQL Instances
+  # ====================
+
+  users_db:
+    image: postgres:15
+    container_name: users_db
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: users
+    ports:
+      - "5433:5432"
+    volumes:
+      - users_data:/var/lib/postgresql/data
+
+  education_db:
+    image: postgres:15
+    container_name: education_db
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: education
+    ports:
+      - "5434:5432"
+    volumes:
+      - education_data:/var/lib/postgresql/data
+
+  activity_db:
+    image: postgres:15
+    container_name: activity_db
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: activity
+    ports:
+      - "5435:5432"
+    volumes:
+      - activity_data:/var/lib/postgresql/data
+
+  # ====================
+  # Node Exporter
+  # ====================
+  node_exporter:
+    image: prom/node-exporter
+    container_name: node_exporter
+    ports:
+      - "9100:9100"
+
+  # ====================
+  # Postgres Exporter
+  # ====================
+  postgres_exporter:
+    image: prometheuscommunity/postgres-exporter
+    container_name: postgres_exporter
+    environment:
+      DATA_SOURCE_NAME: "postgresql://postgres:password@users_db:5432/users?sslmode=disable"
+    depends_on:
+      - users_db
+    ports:
+      - "9187:9187"
+
+  # ====================
+  # Prometheus
+  # ====================
+  prometheus:
+    image: prom/prometheus
+    container_name: prometheus
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+    command:
+      - --config.file=/etc/prometheus/prometheus.yml
+    ports:
+      - "9090:9090"
+
+  # ====================
+  # Grafana
+  # ====================
+  grafana:
+    image: grafana/grafana
+    container_name: grafana
+    ports:
+      - "3000:3000"
+    volumes:
+      - grafana_data:/var/lib/grafana
+
+volumes:
+  users_data:
+  education_data:
+  activity_data:
+  grafana_data:
