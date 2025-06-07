@@ -1,0 +1,21 @@
+global:
+  resolve_timeout: 5m
+
+route:
+  receiver: 'telegram-notifications'
+  group_wait: 30s
+  group_interval: 5m
+  repeat_interval: 2h
+
+receivers:
+- name: 'telegram-notifications'
+  telegram_configs:
+  - bot_token: '7988127534:AAE3q0VL0ZPHv5GztJE_-bGv6U7Ucjo3nnc'
+    chat_id: 822673175
+    parse_mode: 'HTML'
+    api_url: 'https://api.telegram.org'
+    message: |
+      <b>🚨 Alert:</b> {{ .CommonLabels.alertname }}
+      <b>🖥 Host:</b> <code>{{ .CommonLabels.instance }}</code>
+      <b>📊 Value:</b> <pre>{{ .CommonAnnotations.description }}</pre>
+      <b>⏰ Time:</b> {{ .StartsAt.Format "2006-01-02 15:04:05 UTC" }}

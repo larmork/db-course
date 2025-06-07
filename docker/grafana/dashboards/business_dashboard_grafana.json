@@ -12,7 +12,7 @@
         "title": "Total Registered Users",
         "datasource": {
           "type": "postgres",
-          "uid": "your_postgres_uid"
+          "uid": "2244"
         },
         "targets": [
           {
@@ -33,7 +33,7 @@
         "title": "Completed Lessons",
         "datasource": {
           "type": "postgres",
-          "uid": "your_postgres_uid"
+          "uid": "2244"
         },
         "targets": [
           {
@@ -54,7 +54,7 @@
         "title": "Total Comments",
         "datasource": {
           "type": "postgres",
-          "uid": "your_postgres_uid"
+          "uid": "2244"
         },
         "targets": [
           {
